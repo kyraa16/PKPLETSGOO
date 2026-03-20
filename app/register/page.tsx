@@ -1,19 +1,5 @@
-import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
+import RegisterModule from "@/modules/register";
 
 export default function RegisterPage() {
-  return (
-    <main className="min-h-screen relative flex flex-col items-center justify-center gap-8 px-6 md:px-20">
-      {/* BACK BUTTON */}
-      <Link href="/">
-        <Button variant="link" className="absolute left-6 md:left-20 top-26">
-          <ArrowLeft />
-          Back to Landing
-        </Button>
-      </Link>
-
-      <div className="text-red-500">Register Page ygy, OAuth juga</div>
-    </main>
-  );
+  return <RegisterModule />;
 }
