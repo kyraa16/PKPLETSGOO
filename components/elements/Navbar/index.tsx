@@ -9,7 +9,12 @@ const Navbar = () => {
       <Link href="/">
         <div className="flex items-center gap-2 text-2xl font-bold">
           <div className="relative size-9 md:size-12">
-            <Image src="/hengker-black.png" alt="hengker" fill />
+            <Image
+              src="/hengker-black.png"
+              alt="hengker"
+              fill
+              sizes="default"
+            />
           </div>
           <span className="max-md:hidden">PKPLETSGOO</span>
         </div>
