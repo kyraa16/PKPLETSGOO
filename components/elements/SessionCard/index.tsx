@@ -27,7 +27,7 @@ const SessionCard = () => {
   return (
     <Card className="w-64">
       <CardContent className="flex flex-col items-center gap-2">
-        <h1 className="text-xl font-bold text-center">Welcome</h1>
+        <h1 className="text-xl font-bold text-center">Profile</h1>
 
         <div className="relative size-24 rounded-full overflow-hidden">
           <Image

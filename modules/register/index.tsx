@@ -15,7 +15,6 @@ const RegisterModule = () => {
         </Button>
       </Link>
 
-      <div className="text-red-500">Register Page ygy</div>
       <div className="flex flex-col items-center gap-4 w-full max-w-sm border p-8 rounded-lg shadow-sm">
         <h1 className="text-2xl font-bold mb-4">Register</h1>
         <div className="flex flex-col gap-3 w-full">
