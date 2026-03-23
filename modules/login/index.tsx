@@ -1,6 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import GoogleOAuthButton from "@/components/elements/GoogleOAuthButton";
+import GithubOAuthButton from "@/components/elements/GithubOAuthButton";
+
 
 const LoginModule = () => {
   return (
@@ -13,7 +16,13 @@ const LoginModule = () => {
         </Button>
       </Link>
 
-      <div className="text-red-500">Login Page ygy</div>
+      <div className="flex flex-col items-center gap-4 w-full max-w-sm border p-8 rounded-lg shadow-sm">
+        <h1 className="text-2xl font-bold mb-4">Login</h1>
+        <div className="flex flex-col gap-3 w-full">
+          <GoogleOAuthButton />
+          <GithubOAuthButton />
+        </div>
+      </div>
     </main>
   );
 };
