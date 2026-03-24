@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { authClient } from "@/lib/auth-client";
 import { createAuthClient } from "better-auth/react";
-import { LogOut, Loader2 } from "lucide-react";
+import { LogOut, Loader2, Palette } from "lucide-react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
@@ -88,6 +88,9 @@ const Navbar = () => {
 
       {/* AUTHENTICATION */}
       <div className="flex items-center gap-4">
+        <Link href="/theme" aria-label="Appearance settings">
+          <Palette className="size-5 text-muted-foreground hover:text-foreground transition-colors" />
+        </Link>
         <ThemeToggle />
         {isPending ? (
           <Loader2 className="animate-spin h-5 w-5 text-muted-foreground" />
