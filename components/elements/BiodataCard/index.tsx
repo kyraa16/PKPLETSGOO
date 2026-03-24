@@ -8,6 +8,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 
+
 export interface Biodata {
   id: string;
   namaLengkap: string;
@@ -22,9 +23,11 @@ export interface Biodata {
   notes?: string;
 }
 
+
 interface BiodataCardProps {
   data: Biodata;
 }
+
 
 export const BiodataCard = ({ data }: BiodataCardProps) => {
   const initials = data.namaLengkap
@@ -33,6 +36,7 @@ export const BiodataCard = ({ data }: BiodataCardProps) => {
     .join("")
     .substring(0, 2)
     .toUpperCase();
+
 
   return (
     <Card className="w-full max-w-md">
@@ -62,12 +66,12 @@ export const BiodataCard = ({ data }: BiodataCardProps) => {
           <span className="font-semibold text-foreground">Domisili</span>
           <span className="col-span-2">: {data.alamat}</span>
         </div>
-         <div className="grid grid-cols-3">
+        <div className="grid grid-cols-3">
           <span className="font-semibold text-foreground">Angkatan</span>
           <span className="col-span-2">: {data.angkatan}</span>
         </div>
 
-        {}
+
         {data.mbti && (
           <>
             <hr className="my-2" />

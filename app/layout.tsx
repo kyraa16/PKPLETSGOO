@@ -3,18 +3,23 @@ import { Plus_Jakarta_Sans, Geist } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import Navbar from "@/components/elements/Navbar";
+import ThemeProvider from "@/components/elements/ThemeProvider";
+
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
+
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-geist-sans",
   subsets: ["latin"],
 });
 
+
 export const metadata: Metadata = {
   title: "PKPLETSGOO",
   description: "Satu PKPLETSGOO untuk semua",
 };
+
 
 export default function RootLayout({
   children,
@@ -24,6 +29,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={cn(
         "h-full",
         "antialiased",
@@ -33,8 +39,10 @@ export default function RootLayout({
       )}
     >
       <body className="min-h-full flex flex-col">
-        <Navbar />
-        {children}
+        <ThemeProvider>
+          <Navbar />
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

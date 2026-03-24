@@ -1,10 +1,12 @@
 "use client";
 
+
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import { Biodata, BiodataCard } from "@/components/elements/BiodataCard";
 import { createAuthClient } from "better-auth/react";
+
 
 // Data hardcoded anggota kelompok
 const groupMembers: Biodata[] = [
@@ -35,7 +37,7 @@ const groupMembers: Biodata[] = [
   {
     id: "4",
     namaLengkap: "Nazwa Zahra Sausan",
-    ttl: "Jakarta, 13 Mei 2006",
+    ttl: "Lampung, 13 Mei 2006",
     alamat: "Lampung",
     jurusan: "Sistem Informasi",
     angkatan: "2024 - Cosmic",
@@ -43,19 +45,15 @@ const groupMembers: Biodata[] = [
   {
     id: "5",
     namaLengkap: "Syakirah Zahra Dhawini",
-    ttl: "Jakarta, 3 Agustus 2006",
+    ttl: "Bekasi, 3 Agustus 2006",
     alamat: "Bekasi",
     jurusan: "Sistem Informasi",
     angkatan: "2024 - Cosmic",
   },
 ];
 
-const { useSession } = createAuthClient();
 
 const HomeModule = () => {
-  const { data: session, isPending } = useSession();
-  const user = session?.user;
-
   return (
     <main className="min-h-screen relative flex flex-col items-center justify-center gap-8 px-6 py-24 md:px-20">
       {/* MAIN */}
@@ -64,10 +62,18 @@ const HomeModule = () => {
           <div className="text-center space-y-3">
             <div className="relative size-12 align-middle mx-auto">
               <Image
+                src="/hengker-white.png"
+                alt="hengker"
+                fill
+                sizes="default"
+                className="hidden dark:block"
+              />
+              <Image
                 src="/hengker-black.png"
                 alt="hengker"
                 fill
                 sizes="default"
+                className="dark:hidden"
               />
             </div>
             <h1 className="text-3xl md:text-4xl font-bold tracking-tight">
@@ -82,6 +88,7 @@ const HomeModule = () => {
             </p>
           </div>
 
+
           <div className="max-w-6xl flex flex-wrap items-center justify-center gap-6">
             {groupMembers.map((member) => (
               <BiodataCard key={member.id} data={member} />
@@ -92,5 +99,6 @@ const HomeModule = () => {
     </main>
   );
 };
+
 
 export default HomeModule;

@@ -13,9 +13,16 @@ import {
 import { authClient } from "@/lib/auth-client";
 import { createAuthClient } from "better-auth/react";
 import { LogOut, Loader2 } from "lucide-react";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+
+
+const ThemeToggle = dynamic(
+  () => import("@/components/elements/ThemeToggle"),
+  { ssr: false },
+);
 
 
 const { useSession } = createAuthClient();
@@ -60,10 +67,18 @@ const Navbar = () => {
         <div className="flex items-center gap-2 text-2xl font-bold">
           <div className="relative size-9 md:size-12">
             <Image
+              src="/hengker-white.png"
+              alt="hengker"
+              fill
+              sizes="default"
+              className="hidden dark:block"
+            />
+            <Image
               src="/hengker-black.png"
               alt="hengker"
               fill
               sizes="default"
+              className="dark:hidden"
             />
           </div>
           <span className="max-md:hidden">PKPLETSGOO</span>
@@ -73,13 +88,26 @@ const Navbar = () => {
 
       {/* AUTHENTICATION */}
       <div className="flex items-center gap-4">
+        <ThemeToggle />
         {isPending ? (
           <Loader2 className="animate-spin h-5 w-5 text-muted-foreground" />
         ) : session ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button className="relative size-10 rounded-full overflow-hidden md:size-12 focus:outline-none">
-                 <Image
+                <Image
+                  src={
+                    !displayImage || displayImage === ""
+                      ? "/hengker-white.png"
+                      : displayImage
+                  }
+                  alt="profile"
+                  fill
+                  sizes="default"
+                  loading="eager"
+                  className="hidden dark:block"
+                />
+                <Image
                   src={
                     !displayImage || displayImage === ""
                       ? "/hengker-black.png"
@@ -89,8 +117,8 @@ const Navbar = () => {
                   fill
                   sizes="default"
                   loading="eager"
+                  className="dark:hidden"
                 />
-
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-48">
