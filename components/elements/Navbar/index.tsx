@@ -54,7 +54,7 @@ const Navbar = () => {
   const displayLabel = isGithub ? user?.name : user?.email;
 
   return (
-    <nav className="fixed inset-x-0 top-0 flex items-center justify-between h-14 md:h-20 z-9999 px-6 md:px-20 bg-background border-b">
+    <nav className="fixed inset-x-0 top-0 flex items-center justify-between h-14 md:h-20 z-9999 px-6 md:px-20 bg-background/20 backdrop-blur-xl border-b">
       {/* LOGO */}
       <Link href="/">
         <div className="flex items-center gap-2 text-2xl font-bold">

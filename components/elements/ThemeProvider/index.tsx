@@ -150,6 +150,35 @@ export default function ThemeProvider({
   }, []);
 
 
+  // Subscribe to real-time theme changes via SSE
+  useEffect(() => {
+    const es = new EventSource("/api/theme-stream");
+    es.onmessage = (event) => {
+      try {
+        const { theme: t, colorTheme: c, fontTheme: f } = JSON.parse(event.data) as {
+          theme: Theme;
+          colorTheme: ColorTheme;
+          fontTheme: FontTheme;
+        };
+        const resolved = t === "system" ? getSystemTheme() : t;
+        setThemeState(t);
+        setResolvedTheme(resolved);
+        setColorThemeState(c);
+        setFontThemeState(f);
+        applyDarkMode(resolved);
+        applyColorTheme(c);
+        applyFontTheme(f);
+        localStorage.setItem("theme", t);
+        localStorage.setItem("color-theme", c);
+        localStorage.setItem("font-theme", f);
+      } catch {
+        // malformed event — ignore
+      }
+    };
+    return () => es.close();
+  }, []);
+
+
   // Follow system preference when theme is "system"
   useEffect(() => {
     const mq = window.matchMedia("(prefers-color-scheme: dark)");

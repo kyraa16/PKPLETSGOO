@@ -3,6 +3,7 @@
 import { headers } from "next/headers";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
+import { broadcast } from "@/lib/sse";
 import type { Theme, ColorTheme, FontTheme } from "@/components/elements/ThemeProvider";
 
 export async function getConfig() {
@@ -30,9 +31,17 @@ export async function updateConfig(data: {
     throw new Error("Unauthorized: you do not have permission to edit the theme.");
   }
   const payload = { ...data, lastChangedByName: user.name };
-  return prisma.config.upsert({
+  const config = await prisma.config.upsert({
     where: { id: "global" },
     create: { id: "global", ...payload },
     update: payload,
   });
+  broadcast({
+    theme: config.theme,
+    colorTheme: config.colorTheme,
+    fontTheme: config.fontTheme,
+    lastChangedByName: config.lastChangedByName,
+    updatedAt: config.updatedAt.toISOString(),
+  });
+  return config;
 }
