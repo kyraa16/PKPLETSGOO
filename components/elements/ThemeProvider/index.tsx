@@ -1,6 +1,5 @@
 "use client";
 
-
 import {
   createContext,
   useCallback,
@@ -8,6 +7,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import { getConfig, updateConfig } from "@/lib/actions/config";
 
 
 // ── Types ─────────────────────────────────────────────────────
@@ -38,6 +38,7 @@ export type FontTheme =
 type ThemeContextType = {
   theme: Theme;
   resolvedTheme: "light" | "dark";
+  canEditTheme: boolean;
   setTheme: (theme: Theme) => void;
 };
 
@@ -57,6 +58,7 @@ type FontThemeContextType = {
 const ThemeContext = createContext<ThemeContextType>({
   theme: "system",
   resolvedTheme: "light",
+  canEditTheme: false,
   setTheme: () => {},
 });
 
@@ -116,8 +118,10 @@ function applyFontTheme(font: FontTheme) {
 
 export default function ThemeProvider({
   children,
+  canEditTheme = false,
 }: {
   children: React.ReactNode;
+  canEditTheme?: boolean;
 }) {
   const [theme, setThemeState] = useState<Theme>("system");
   const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">("light");
@@ -125,25 +129,53 @@ export default function ThemeProvider({
   const [fontTheme, setFontThemeState] = useState<FontTheme>("default");
 
 
-  // Initialise from localStorage on mount
+  // Load config from DB on mount and sync to localStorage
   useEffect(() => {
-    const savedTheme =
-      (localStorage.getItem("theme") as Theme | null) ?? "system";
-    const savedColor =
-      (localStorage.getItem("color-theme") as ColorTheme | null) ?? "default";
-    const savedFont =
-      (localStorage.getItem("font-theme") as FontTheme | null) ?? "default";
-    const resolved =
-      savedTheme === "system" ? getSystemTheme() : savedTheme;
+    getConfig().then((config) => {
+      const t = config.theme as Theme;
+      const c = config.colorTheme as ColorTheme;
+      const f = config.fontTheme as FontTheme;
+      const resolved = t === "system" ? getSystemTheme() : t;
+      setThemeState(t);
+      setResolvedTheme(resolved);
+      setColorThemeState(c);
+      setFontThemeState(f);
+      applyDarkMode(resolved);
+      applyColorTheme(c);
+      applyFontTheme(f);
+      localStorage.setItem("theme", t);
+      localStorage.setItem("color-theme", c);
+      localStorage.setItem("font-theme", f);
+    });
+  }, []);
 
 
-    setThemeState(savedTheme);
-    setResolvedTheme(resolved);
-    setColorThemeState(savedColor);
-    setFontThemeState(savedFont);
-    applyDarkMode(resolved);
-    applyColorTheme(savedColor);
-    applyFontTheme(savedFont);
+  // Subscribe to real-time theme changes via SSE
+  useEffect(() => {
+    const es = new EventSource("/api/theme-stream");
+    es.onmessage = (event) => {
+      try {
+        const { theme: t, colorTheme: c, fontTheme: f } = JSON.parse(event.data) as {
+          theme: Theme;
+          colorTheme: ColorTheme;
+          fontTheme: FontTheme;
+        };
+        const resolved = t === "system" ? getSystemTheme() : t;
+        setThemeState(t);
+        setResolvedTheme(resolved);
+        setColorThemeState(c);
+        setFontThemeState(f);
+        applyDarkMode(resolved);
+        applyColorTheme(c);
+        applyFontTheme(f);
+        localStorage.setItem("theme", t);
+        localStorage.setItem("color-theme", c);
+        localStorage.setItem("font-theme", f);
+      } catch {
+        // malformed event — ignore
+      }
+    };
+    return () => es.close();
   }, []);
 
 
@@ -166,27 +198,30 @@ export default function ThemeProvider({
     const resolved = newTheme === "system" ? getSystemTheme() : newTheme;
     setThemeState(newTheme);
     setResolvedTheme(resolved);
-    localStorage.setItem("theme", newTheme);
     applyDarkMode(resolved);
+    localStorage.setItem("theme", newTheme);
+    updateConfig({ theme: newTheme });
   }, []);
 
 
   const setColorTheme = useCallback((newColor: ColorTheme) => {
     setColorThemeState(newColor);
-    localStorage.setItem("color-theme", newColor);
     applyColorTheme(newColor);
+    localStorage.setItem("color-theme", newColor);
+    updateConfig({ colorTheme: newColor });
   }, []);
 
 
   const setFontTheme = useCallback((newFont: FontTheme) => {
     setFontThemeState(newFont);
-    localStorage.setItem("font-theme", newFont);
     applyFontTheme(newFont);
+    localStorage.setItem("font-theme", newFont);
+    updateConfig({ fontTheme: newFont });
   }, []);
 
 
   return (
-    <ThemeContext.Provider value={{ theme, resolvedTheme, setTheme }}>
+    <ThemeContext.Provider value={{ theme, resolvedTheme, canEditTheme, setTheme }}>
       <ColorThemeContext.Provider value={{ colorTheme, setColorTheme }}>
         <FontThemeContext.Provider value={{ fontTheme, setFontTheme }}>
           {children}
