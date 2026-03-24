@@ -54,12 +54,13 @@ const groupMembers: Biodata[] = [
 ];
 
 
-const HomeModule = () => {
+const HomeModule = ({ banner }: { banner?: React.ReactNode }) => {
   return (
     <main className="min-h-screen relative flex flex-col items-center justify-center gap-8 px-6 py-24 md:px-20">
       {/* MAIN */}
       <section className="flex flex-col items-center">
         <div className="max-w-5xl mx-auto space-y-8">
+          {banner}
           <div className="text-center space-y-3">
             <div className="relative size-12 align-middle mx-auto">
               <Image

@@ -24,14 +24,15 @@ export async function updateConfig(data: {
   }
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },
-    select: { canEditTheme: true },
+    select: { canEditTheme: true, name: true },
   });
   if (!user?.canEditTheme) {
     throw new Error("Unauthorized: you do not have permission to edit the theme.");
   }
+  const payload = { ...data, lastChangedByName: user.name };
   return prisma.config.upsert({
     where: { id: "global" },
-    create: { id: "global", ...data },
-    update: data,
+    create: { id: "global", ...payload },
+    update: payload,
   });
 }
