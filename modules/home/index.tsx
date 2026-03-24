@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import { Biodata, BiodataCard } from "@/components/elements/BiodataCard";
+import LoginBanner from "@/components/elements/LoginBanner";
 import { createAuthClient } from "better-auth/react";
 
 
@@ -94,6 +95,8 @@ const HomeModule = () => {
               <BiodataCard key={member.id} data={member} />
             ))}
           </div>
+
+          <LoginBanner />
         </div>
       </section>
     </main>
