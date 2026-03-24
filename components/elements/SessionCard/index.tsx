@@ -1,5 +1,6 @@
 "use client";
 
+import GithubOAuthButton from "@/components/elements/GithubOAuthButton";
 import GoogleOAuthButton from "@/components/elements/GoogleOAuthButton";
 import LogoutButton from "@/components/elements/LogoutButton";
 import { Card, CardContent } from "@/components/ui/card";
@@ -16,12 +17,17 @@ const SessionCard = () => {
   if (isPending) {
     return <Loader2 className="animate-spin" />;
   } else if (!session) {
-    return <GoogleOAuthButton />;
+    return (
+      <div className="flex flex-col gap-3 w-64">
+        <GoogleOAuthButton />
+        <GithubOAuthButton />
+      </div>
+    );
   }
   return (
     <Card className="w-64">
       <CardContent className="flex flex-col items-center gap-2">
-        <h1 className="text-xl font-bold text-center">Welcome</h1>
+        <h1 className="text-xl font-bold text-center">Profile</h1>
 
         <div className="relative size-24 rounded-full overflow-hidden">
           <Image
