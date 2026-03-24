@@ -17,7 +17,7 @@ export interface Biodata {
   mbti?: string;
   makananFav?: string;
   hobi?: string;
-  statusTinggal?: string; 
+  statusTinggal?: string;
   notes?: string;
 }
 
@@ -34,16 +34,21 @@ export const BiodataCard = ({ data }: BiodataCardProps) => {
     .toUpperCase();
 
   return (
-    <Card className="w-full max-w-md shadow-md hover:shadow-lg transition-shadow">
+    <Card className="w-full max-w-md">
       <CardHeader className="flex flex-row items-center gap-4 pb-2">
         <Avatar className="w-16 h-16">
-          <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${data.namaLengkap}`} alt={data.namaLengkap} />
+          <AvatarImage
+            src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${data.namaLengkap}`}
+            alt={data.namaLengkap}
+          />
           <AvatarFallback>{initials}</AvatarFallback>
         </Avatar>
         <div className="flex flex-col">
           <CardTitle className="text-xl">{data.namaLengkap}</CardTitle>
           <CardDescription>
-            <Badge variant="secondary" className="mt-1">{data.jurusan}</Badge>
+            <Badge variant="secondary" className="mt-1">
+              {data.jurusan}
+            </Badge>
           </CardDescription>
         </div>
       </CardHeader>
