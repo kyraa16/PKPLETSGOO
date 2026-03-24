@@ -14,6 +14,7 @@ export interface Biodata {
   ttl: string;
   alamat: string;
   jurusan: string;
+  angkatan: string;
   mbti?: string;
   makananFav?: string;
   hobi?: string;
@@ -60,6 +61,10 @@ export const BiodataCard = ({ data }: BiodataCardProps) => {
         <div className="grid grid-cols-3">
           <span className="font-semibold text-foreground">Domisili</span>
           <span className="col-span-2">: {data.alamat}</span>
+        </div>
+         <div className="grid grid-cols-3">
+          <span className="font-semibold text-foreground">Angkatan</span>
+          <span className="col-span-2">: {data.angkatan}</span>
         </div>
 
         {}
