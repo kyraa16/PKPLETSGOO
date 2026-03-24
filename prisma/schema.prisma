@@ -69,3 +69,13 @@ model Verification {
   @@index([identifier])
   @@map("verification")
 }
+
+model Config {
+  id         String   @id @default("global")
+  theme      String   @default("system")
+  colorTheme String   @default("default")
+  fontTheme  String   @default("default")
+  updatedAt  DateTime @updatedAt
+
+  @@map("config")
+}

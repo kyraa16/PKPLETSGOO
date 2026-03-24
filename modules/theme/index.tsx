@@ -239,12 +239,10 @@ export default function ThemeModule() {
                       ? "border-primary bg-primary/5"
                       : "border-border hover:border-primary/40 hover:bg-muted/50",
                   )}
+                  style={previewStyle}
                 >
                   {/* Font name rendered in its own typeface */}
-                  <span
-                    className="text-2xl font-semibold w-16 shrink-0 text-foreground"
-                    style={previewStyle}
-                  >
+                  <span className="text-2xl font-semibold w-16 shrink-0 text-foreground">
                     Aa
                   </span>
                   <span className="flex flex-col min-w-0">

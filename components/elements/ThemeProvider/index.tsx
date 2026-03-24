@@ -1,6 +1,5 @@
 "use client";
 
-
 import {
   createContext,
   useCallback,
@@ -8,6 +7,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import { getConfig, updateConfig } from "@/lib/actions/config";
 
 
 // ── Types ─────────────────────────────────────────────────────
@@ -119,29 +119,28 @@ export default function ThemeProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [theme, setThemeState] = useState<Theme>(() => {
-    if (typeof window === "undefined") return "system";
-    return (localStorage.getItem("theme") as Theme | null) ?? "system";
-  });
-  const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">(() => {
-    if (typeof window === "undefined") return "light";
-    const saved = (localStorage.getItem("theme") as Theme | null) ?? "system";
-    return saved === "system" ? getSystemTheme() : (saved as "light" | "dark");
-  });
-  const [colorTheme, setColorThemeState] = useState<ColorTheme>(() => {
-    if (typeof window === "undefined") return "default";
-    return (localStorage.getItem("color-theme") as ColorTheme | null) ?? "default";
-  });
-  const [fontTheme, setFontThemeState] = useState<FontTheme>(() => {
-    if (typeof window === "undefined") return "default";
-    return (localStorage.getItem("font-theme") as FontTheme | null) ?? "default";
-  });
+  const [theme, setThemeState] = useState<Theme>("system");
+  const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">("light");
+  const [colorTheme, setColorThemeState] = useState<ColorTheme>("default");
+  const [fontTheme, setFontThemeState] = useState<FontTheme>("default");
 
 
-  // Sync DOM with state
-  useEffect(() => { applyDarkMode(resolvedTheme); }, [resolvedTheme]);
-  useEffect(() => { applyColorTheme(colorTheme); }, [colorTheme]);
-  useEffect(() => { applyFontTheme(fontTheme); }, [fontTheme]);
+  // Load config from DB on mount
+  useEffect(() => {
+    getConfig().then((config) => {
+      const t = config.theme as Theme;
+      const c = config.colorTheme as ColorTheme;
+      const f = config.fontTheme as FontTheme;
+      const resolved = t === "system" ? getSystemTheme() : t;
+      setThemeState(t);
+      setResolvedTheme(resolved);
+      setColorThemeState(c);
+      setFontThemeState(f);
+      applyDarkMode(resolved);
+      applyColorTheme(c);
+      applyFontTheme(f);
+    });
+  }, []);
 
 
   // Follow system preference when theme is "system"
@@ -163,22 +162,22 @@ export default function ThemeProvider({
     const resolved = newTheme === "system" ? getSystemTheme() : newTheme;
     setThemeState(newTheme);
     setResolvedTheme(resolved);
-    localStorage.setItem("theme", newTheme);
     applyDarkMode(resolved);
+    updateConfig({ theme: newTheme });
   }, []);
 
 
   const setColorTheme = useCallback((newColor: ColorTheme) => {
     setColorThemeState(newColor);
-    localStorage.setItem("color-theme", newColor);
     applyColorTheme(newColor);
+    updateConfig({ colorTheme: newColor });
   }, []);
 
 
   const setFontTheme = useCallback((newFont: FontTheme) => {
     setFontThemeState(newFont);
-    localStorage.setItem("font-theme", newFont);
     applyFontTheme(newFont);
+    updateConfig({ fontTheme: newFont });
   }, []);
 
 
