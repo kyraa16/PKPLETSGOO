@@ -1,6 +1,5 @@
 "use client";
 
-
 import {
   useTheme,
   useColorTheme,
@@ -8,16 +7,16 @@ import {
   type ColorTheme,
   type FontTheme,
 } from "@/components/elements/ThemeProvider";
-import { Monitor, Moon, Sun, Check } from "lucide-react";
+import { Monitor, Moon, Sun, Check, ArrowLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
-
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 const lightDarkOptions = [
   { value: "light", label: "Light", icon: Sun },
   { value: "dark", label: "Dark", icon: Moon },
   { value: "system", label: "System", icon: Monitor },
 ] as const;
-
 
 type ColorOption = {
   value: ColorTheme;
@@ -26,18 +25,41 @@ type ColorOption = {
   dark: string;
 };
 
-
 const colorOptions: ColorOption[] = [
-  { value: "default", label: "Default",  light: "bg-zinc-900",    dark: "bg-zinc-200"    },
-  { value: "rose",    label: "Rose",     light: "bg-rose-600",    dark: "bg-rose-300"    },
-  { value: "blue",    label: "Blue",     light: "bg-blue-600",    dark: "bg-blue-300"    },
-  { value: "green",   label: "Green",    light: "bg-emerald-600", dark: "bg-emerald-300" },
-  { value: "purple",  label: "Purple",   light: "bg-violet-600",  dark: "bg-violet-300"  },
-  { value: "orange",  label: "Orange",   light: "bg-orange-600",  dark: "bg-orange-300"  },
-  { value: "cyan",    label: "Cyan",     light: "bg-cyan-600",    dark: "bg-cyan-300"    },
-  { value: "yellow",  label: "Yellow",   light: "bg-yellow-500",  dark: "bg-yellow-200"  },
+  {
+    value: "default",
+    label: "Default",
+    light: "bg-zinc-900",
+    dark: "bg-zinc-200",
+  },
+  { value: "rose", label: "Rose", light: "bg-rose-600", dark: "bg-rose-300" },
+  { value: "blue", label: "Blue", light: "bg-blue-600", dark: "bg-blue-300" },
+  {
+    value: "green",
+    label: "Green",
+    light: "bg-emerald-600",
+    dark: "bg-emerald-300",
+  },
+  {
+    value: "purple",
+    label: "Purple",
+    light: "bg-violet-600",
+    dark: "bg-violet-300",
+  },
+  {
+    value: "orange",
+    label: "Orange",
+    light: "bg-orange-600",
+    dark: "bg-orange-300",
+  },
+  { value: "cyan", label: "Cyan", light: "bg-cyan-600", dark: "bg-cyan-300" },
+  {
+    value: "yellow",
+    label: "Yellow",
+    light: "bg-yellow-500",
+    dark: "bg-yellow-200",
+  },
 ];
-
 
 type FontOption = {
   value: FontTheme;
@@ -46,7 +68,6 @@ type FontOption = {
   previewStyle: React.CSSProperties;
   description: string;
 };
-
 
 const fontOptions: FontOption[] = [
   {
@@ -87,15 +108,21 @@ const fontOptions: FontOption[] = [
   },
 ];
 
-
 export default function ThemeModule() {
   const { theme, setTheme, resolvedTheme } = useTheme();
   const { colorTheme, setColorTheme } = useColorTheme();
   const { fontTheme, setFontTheme } = useFontTheme();
 
-
   return (
     <main className="min-h-screen pt-24 pb-16 px-6 md:px-20">
+      {/* BACK BUTTON */}
+      <Link href="/">
+        <Button variant="link" className="absolute left-6 md:left-20 top-26">
+          <ArrowLeft />
+          Back to Landing
+        </Button>
+      </Link>
+
       <div className="max-w-2xl mx-auto space-y-12">
         {/* Header */}
         <div>
@@ -104,7 +131,6 @@ export default function ThemeModule() {
             Customize how PKPLETSGOO looks for you.
           </p>
         </div>
-
 
         {/* Dark / Light / System */}
         <section className="space-y-4">
@@ -130,8 +156,18 @@ export default function ThemeModule() {
                       <Check className="size-3" strokeWidth={3} />
                     </span>
                   )}
-                  <Icon className={cn("size-6", active ? "text-primary" : "text-muted-foreground")} />
-                  <span className={cn("text-sm font-medium", active ? "text-primary" : "text-foreground")}>
+                  <Icon
+                    className={cn(
+                      "size-6",
+                      active ? "text-primary" : "text-muted-foreground",
+                    )}
+                  />
+                  <span
+                    className={cn(
+                      "text-sm font-medium",
+                      active ? "text-primary" : "text-foreground",
+                    )}
+                  >
                     {label}
                   </span>
                 </button>
@@ -139,7 +175,6 @@ export default function ThemeModule() {
             })}
           </div>
         </section>
-
 
         {/* Color Themes */}
         <section className="space-y-4">
@@ -170,7 +205,9 @@ export default function ThemeModule() {
                       <Check
                         className={cn(
                           "size-5 stroke-3",
-                          resolvedTheme === "dark" ? "text-zinc-900" : "text-white",
+                          resolvedTheme === "dark"
+                            ? "text-zinc-900"
+                            : "text-white",
                         )}
                       />
                     )}
@@ -183,7 +220,6 @@ export default function ThemeModule() {
             })}
           </div>
         </section>
-
 
         {/* Font Themes */}
         <section className="space-y-4">
@@ -234,7 +270,6 @@ export default function ThemeModule() {
             })}
           </div>
         </section>
-
 
         {/* Live Preview */}
         <section className="space-y-4">

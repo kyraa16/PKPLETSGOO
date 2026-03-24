@@ -1,6 +1,5 @@
 "use client";
 
-
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -18,21 +17,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-
-const ThemeToggle = dynamic(
-  () => import("@/components/elements/ThemeToggle"),
-  { ssr: false },
-);
-
+const ThemeToggle = dynamic(() => import("@/components/elements/ThemeToggle"), {
+  ssr: false,
+});
 
 const { useSession } = createAuthClient();
-
 
 const Navbar = () => {
   const { data: session, isPending } = useSession();
   const user = session?.user;
   const [githubAccountId, setGithubAccountId] = useState<string | null>(null);
-
 
   useEffect(() => {
     if (!session) return;
@@ -46,19 +40,16 @@ const Navbar = () => {
     });
   }, [session]);
 
-
   const handleLogout = async () => {
     await authClient.signOut();
     window.location.href = "/login";
   };
-
 
   const isGithub = !!githubAccountId;
   const displayImage = isGithub
     ? `https://avatars.githubusercontent.com/u/${githubAccountId}`
     : (user?.image as string);
   const displayLabel = isGithub ? user?.name : user?.email;
-
 
   return (
     <nav className="fixed inset-0 flex items-center justify-between h-14 md:h-20 z-9999 px-6 md:px-20">
@@ -84,7 +75,6 @@ const Navbar = () => {
           <span className="max-md:hidden">PKPLETSGOO</span>
         </div>
       </Link>
-
 
       {/* AUTHENTICATION */}
       <div className="flex items-center gap-4">
@@ -147,6 +137,5 @@ const Navbar = () => {
     </nav>
   );
 };
-
 
 export default Navbar;
