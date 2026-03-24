@@ -2,7 +2,6 @@ import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { getNotes } from "@/lib/actions/notes";
 import NotesModule from "@/modules/notes";
-import { Note } from "@prisma/client";
 
 export const metadata = {
   title: "Sticky Notes · PKPLETSGOO",
@@ -14,7 +13,7 @@ export default async function NotesPage() {
     getNotes(),
   ]);
 
-  const initialNotes = notes.map((n: Note) => ({
+  const initialNotes = notes.map((n) => ({
     ...n,
     createdAt: n.createdAt.toISOString(),
   }));
