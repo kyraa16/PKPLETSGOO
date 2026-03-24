@@ -16,11 +16,7 @@ export interface Biodata {
   alamat: string;
   jurusan: string;
   angkatan: string;
-  mbti?: string;
-  makananFav?: string;
-  hobi?: string;
-  statusTinggal?: string;
-  notes?: string;
+  gender: "male" | "female";
 }
 
 
@@ -37,15 +33,17 @@ export const BiodataCard = ({ data }: BiodataCardProps) => {
     .substring(0, 2)
     .toUpperCase();
 
+const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(
+  data.namaLengkap
+)}&background=${
+  data.gender === "female" ? "fbcfe8" : "bfdbfe"
+}&color=000&bold=true`;
 
   return (
     <Card className="w-full max-w-md">
       <CardHeader className="flex flex-row items-center gap-4 pb-2">
         <Avatar className="w-16 h-16">
-          <AvatarImage
-            src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${data.namaLengkap}`}
-            alt={data.namaLengkap}
-          />
+          <AvatarImage src={avatarUrl} alt={data.namaLengkap} />
           <AvatarFallback>{initials}</AvatarFallback>
         </Avatar>
         <div className="flex flex-col">
@@ -70,29 +68,6 @@ export const BiodataCard = ({ data }: BiodataCardProps) => {
           <span className="font-semibold text-foreground">Angkatan</span>
           <span className="col-span-2">: {data.angkatan}</span>
         </div>
-
-
-        {data.mbti && (
-          <>
-            <hr className="my-2" />
-            <div className="grid grid-cols-3">
-              <span className="font-semibold text-foreground">MBTI</span>
-              <span className="col-span-2">: {data.mbti}</span>
-            </div>
-            <div className="grid grid-cols-3">
-              <span className="font-semibold text-foreground">Hobi</span>
-              <span className="col-span-2">: {data.hobi}</span>
-            </div>
-            <div className="grid grid-cols-3">
-              <span className="font-semibold text-foreground">Favorit</span>
-              <span className="col-span-2">: {data.makananFav}</span>
-            </div>
-            <div className="grid grid-cols-3">
-              <span className="font-semibold text-foreground">Status</span>
-              <span className="col-span-2">: {data.statusTinggal}</span>
-            </div>
-          </>
-        )}
       </CardContent>
     </Card>
   );
