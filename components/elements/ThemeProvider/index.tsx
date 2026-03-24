@@ -119,32 +119,29 @@ export default function ThemeProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [theme, setThemeState] = useState<Theme>("system");
-  const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">("light");
-  const [colorTheme, setColorThemeState] = useState<ColorTheme>("default");
-  const [fontTheme, setFontThemeState] = useState<FontTheme>("default");
+  const [theme, setThemeState] = useState<Theme>(() => {
+    if (typeof window === "undefined") return "system";
+    return (localStorage.getItem("theme") as Theme | null) ?? "system";
+  });
+  const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">(() => {
+    if (typeof window === "undefined") return "light";
+    const saved = (localStorage.getItem("theme") as Theme | null) ?? "system";
+    return saved === "system" ? getSystemTheme() : (saved as "light" | "dark");
+  });
+  const [colorTheme, setColorThemeState] = useState<ColorTheme>(() => {
+    if (typeof window === "undefined") return "default";
+    return (localStorage.getItem("color-theme") as ColorTheme | null) ?? "default";
+  });
+  const [fontTheme, setFontThemeState] = useState<FontTheme>(() => {
+    if (typeof window === "undefined") return "default";
+    return (localStorage.getItem("font-theme") as FontTheme | null) ?? "default";
+  });
 
 
-  // Initialise from localStorage on mount
-  useEffect(() => {
-    const savedTheme =
-      (localStorage.getItem("theme") as Theme | null) ?? "system";
-    const savedColor =
-      (localStorage.getItem("color-theme") as ColorTheme | null) ?? "default";
-    const savedFont =
-      (localStorage.getItem("font-theme") as FontTheme | null) ?? "default";
-    const resolved =
-      savedTheme === "system" ? getSystemTheme() : savedTheme;
-
-
-    setThemeState(savedTheme);
-    setResolvedTheme(resolved);
-    setColorThemeState(savedColor);
-    setFontThemeState(savedFont);
-    applyDarkMode(resolved);
-    applyColorTheme(savedColor);
-    applyFontTheme(savedFont);
-  }, []);
+  // Sync DOM with state
+  useEffect(() => { applyDarkMode(resolvedTheme); }, [resolvedTheme]);
+  useEffect(() => { applyColorTheme(colorTheme); }, [colorTheme]);
+  useEffect(() => { applyFontTheme(fontTheme); }, [fontTheme]);
 
 
   // Follow system preference when theme is "system"
