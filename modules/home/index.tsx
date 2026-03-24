@@ -18,6 +18,7 @@ const groupMembers: Biodata[] = [
     alamat: "Bekasi",
     jurusan: "Ilmu Komputer",
     angkatan: "2024 - Cosmic",
+    gender: "female",
   },
   {
     id: "2",
@@ -26,6 +27,7 @@ const groupMembers: Biodata[] = [
     alamat: "Cibubur",
     jurusan: "Ilmu Komputer",
     angkatan: "2024 - Cosmic",
+    gender: "male"
   },
   {
     id: "3",
@@ -34,6 +36,7 @@ const groupMembers: Biodata[] = [
     alamat: "Jakarta",
     jurusan: "Sistem Informasi",
     angkatan: "2024 - Cosmic",
+    gender: "male",
   },
   {
     id: "4",
@@ -42,6 +45,7 @@ const groupMembers: Biodata[] = [
     alamat: "Lampung",
     jurusan: "Sistem Informasi",
     angkatan: "2024 - Cosmic",
+    gender: "female",
   },
   {
     id: "5",
@@ -50,6 +54,7 @@ const groupMembers: Biodata[] = [
     alamat: "Bekasi",
     jurusan: "Sistem Informasi",
     angkatan: "2024 - Cosmic",
+    gender: "female",
   },
 ];
 
