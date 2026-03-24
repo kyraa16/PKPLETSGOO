@@ -55,7 +55,7 @@ export default async function RootLayout({
           where: { id: session.user.id },
           select: { canEditTheme: true },
         })
-        .then((u) => u?.canEditTheme ?? false)
+        .then((u: { canEditTheme: boolean } | null) => u?.canEditTheme ?? false)
     : false;
 
   return (
