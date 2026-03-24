@@ -78,6 +78,13 @@ const Navbar = () => {
         </div>
       </Link>
 
+      {/* NAVIGATIONS */}
+      <div className="flex gap-2 items-center font-bold">
+        <Link href="/notes" className="hover:underline">
+          NOTES
+        </Link>
+      </div>
+
       {/* AUTHENTICATION */}
       <div className="flex items-center gap-4">
         {canEditTheme && (

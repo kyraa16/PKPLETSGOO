@@ -18,6 +18,7 @@ model User {
   updatedAt     DateTime  @updatedAt
   sessions      Session[]
   accounts      Account[]
+  notes         Note[]
 
   @@unique([email])
   @@map("user")
@@ -69,6 +70,18 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
+}
+
+model Note {
+  id         String   @id @default(cuid())
+  content    String
+  color      String   @default("yellow")
+  authorId   String
+  authorName String
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@map("note")
 }
 
 model Config {
