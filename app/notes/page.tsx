@@ -2,12 +2,11 @@ import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { getNotes } from "@/lib/actions/notes";
 import NotesModule from "@/modules/notes";
-
+import { Note } from "@prisma/client";
 
 export const metadata = {
   title: "Sticky Notes · PKPLETSGOO",
 };
-
 
 export default async function NotesPage() {
   const [session, notes] = await Promise.all([
@@ -15,7 +14,7 @@ export default async function NotesPage() {
     getNotes(),
   ]);
 
-  const initialNotes = notes.map((n) => ({
+  const initialNotes = notes.map((n: Note) => ({
     ...n,
     createdAt: n.createdAt.toISOString(),
   }));
