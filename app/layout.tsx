@@ -74,7 +74,7 @@ export default async function RootLayout({
     >
       {/* Inline script runs synchronously before first paint — prevents FOUC */}
       <head>
-        <template
+        <script
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var t=localStorage.getItem('theme')||'system';if(t==='system'){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}if(t==='dark')document.documentElement.classList.add('dark');var c=localStorage.getItem('color-theme');if(c&&c!=='default')document.documentElement.classList.add('theme-'+c);var f=localStorage.getItem('font-theme');if(f&&f!=='default')document.documentElement.classList.add('font-'+f);}catch(e){}})();`,
           }}
