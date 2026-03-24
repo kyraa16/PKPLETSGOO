@@ -6,10 +6,13 @@ import {
   Nunito,
   Roboto,
 } from "next/font/google";
+import { headers } from "next/headers";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import Navbar from "@/components/elements/Navbar";
 import ThemeProvider from "@/components/elements/ThemeProvider";
+import { auth } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -40,11 +43,18 @@ export const metadata: Metadata = {
   description: "Satu PKPLETSGOO untuk semua",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth.api.getSession({ headers: await headers() });
+  const canEditTheme = session?.user
+    ? await prisma.user
+        .findUnique({ where: { id: session.user.id }, select: { canEditTheme: true } })
+        .then((u) => u?.canEditTheme ?? false)
+    : false;
+
   return (
     <html
       lang="en"
@@ -59,16 +69,16 @@ export default function RootLayout({
         roboto.variable,
       )}
     >
-      {/* Inline script runs synchronously before first paint — prevents FOUC
+      {/* Inline script runs synchronously before first paint — prevents FOUC */}
       <head>
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var t=localStorage.getItem('theme')||'system';if(t==='system'){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}if(t==='dark')document.documentElement.classList.add('dark');var c=localStorage.getItem('color-theme');if(c&&c!=='default')document.documentElement.classList.add('theme-'+c);var f=localStorage.getItem('font-theme');if(f&&f!=='default')document.documentElement.classList.add('font-'+f);}catch(e){}})();`,
           }}
         />
-      </head> */}
+      </head>
       <body className="min-h-full flex flex-col">
-        <ThemeProvider>
+        <ThemeProvider canEditTheme={canEditTheme}>
           <Navbar />
           {children}
         </ThemeProvider>

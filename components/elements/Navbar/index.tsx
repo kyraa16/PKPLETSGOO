@@ -16,6 +16,7 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useTheme } from "@/components/elements/ThemeProvider";
 
 const ThemeToggle = dynamic(() => import("@/components/elements/ThemeToggle"), {
   ssr: false,
@@ -25,6 +26,7 @@ const { useSession } = createAuthClient();
 
 const Navbar = () => {
   const { data: session, isPending } = useSession();
+  const { canEditTheme } = useTheme();
   const user = session?.user;
   const [githubAccountId, setGithubAccountId] = useState<string | null>(null);
 
@@ -78,10 +80,14 @@ const Navbar = () => {
 
       {/* AUTHENTICATION */}
       <div className="flex items-center gap-4">
-        <Link href="/theme" aria-label="Appearance settings">
-          <Palette className="size-5 text-muted-foreground hover:text-foreground transition-colors" />
-        </Link>
-        <ThemeToggle />
+        {canEditTheme && (
+          <>
+            <Link href="/theme" aria-label="Appearance settings">
+              <Palette className="size-5 text-muted-foreground hover:text-foreground transition-colors" />
+            </Link>
+            <ThemeToggle />
+          </>
+        )}
         {isPending ? (
           <Loader2 className="animate-spin h-5 w-5 text-muted-foreground" />
         ) : session ? (
