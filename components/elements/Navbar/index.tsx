@@ -15,7 +15,6 @@ import { LogOut, Loader2, Palette } from "lucide-react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { useTheme } from "@/components/elements/ThemeProvider";
 
 const ThemeToggle = dynamic(() => import("@/components/elements/ThemeToggle"), {
@@ -28,32 +27,13 @@ const Navbar = () => {
   const { data: session, isPending } = useSession();
   const { canEditTheme } = useTheme();
   const user = session?.user;
-  const [githubAccountId, setGithubAccountId] = useState<string | null>(null);
-  const [accountsLoaded, setAccountsLoaded] = useState(false);
-
-  useEffect(() => {
-    if (!session) return;
-    authClient.listAccounts().then(({ data }) => {
-      const github = data?.find(
-        (a: { providerId: string }) => a.providerId === "github",
-      );
-      setGithubAccountId(
-        (github as { accountId: string } | undefined)?.accountId ?? null,
-      );
-      setAccountsLoaded(true);
-    });
-  }, [session]);
-
   const handleLogout = async () => {
     await authClient.signOut();
     window.location.href = "/login";
   };
 
-  const isGithub = !!githubAccountId;
-  const displayImage = isGithub
-    ? `https://avatars.githubusercontent.com/u/${githubAccountId}`
-    : (user?.image as string);
-  const displayLabel = isGithub ? user?.name : user?.email;
+  const displayImage = user?.image as string;
+  const displayLabel = user?.name || user?.email;
 
   return (
     <nav className="fixed inset-x-0 top-0 flex items-center justify-between h-14 md:h-20 z-9999 px-6 md:px-20 bg-background/20 backdrop-blur-xl border-b">
@@ -97,7 +77,7 @@ const Navbar = () => {
             <ThemeToggle />
           </>
         )}
-        {isPending || (session && !accountsLoaded) ? (
+        {isPending ? (
           <Loader2 className="animate-spin h-5 w-5 text-muted-foreground" />
         ) : session ? (
           <DropdownMenu>
