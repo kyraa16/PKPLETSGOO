@@ -32,7 +32,7 @@ const Navbar = () => {
     window.location.href = "/login";
   };
 
-  const displayImage = user?.image as string;
+  // const displayImage = user?.image as string;
   const displayLabel = user?.name || user?.email;
 
   return (
@@ -82,7 +82,7 @@ const Navbar = () => {
         ) : session ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="relative size-10 rounded-full overflow-hidden md:size-12 focus:outline-none">
+              <button className="flex items-center justify-center relative size-10 rounded-full border-2 border-black dark:border-white overflow-hidden md:size-12 focus:outline-none">
                 <User />
               </button>
             </DropdownMenuTrigger>
