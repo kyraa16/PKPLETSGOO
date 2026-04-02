@@ -129,6 +129,21 @@ export default function ThemeProvider({
   const [fontTheme, setFontThemeState] = useState<FontTheme>("default");
 
 
+  // Apply stored theme immediately to avoid flash before DB resolves
+  useEffect(() => {
+    const t = (localStorage.getItem("theme") as Theme) || "system";
+    const c = (localStorage.getItem("color-theme") as ColorTheme) || "default";
+    const f = (localStorage.getItem("font-theme") as FontTheme) || "default";
+    const resolved = t === "system" ? getSystemTheme() : t;
+    setThemeState(t);
+    setResolvedTheme(resolved);
+    setColorThemeState(c);
+    setFontThemeState(f);
+    applyDarkMode(resolved);
+    applyColorTheme(c);
+    applyFontTheme(f);
+  }, []);
+
   // Load config from DB on mount and sync to localStorage
   useEffect(() => {
     getConfig().then((config) => {
