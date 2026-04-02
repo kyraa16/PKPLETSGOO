@@ -29,6 +29,7 @@ const Navbar = () => {
   const { canEditTheme } = useTheme();
   const user = session?.user;
   const [githubAccountId, setGithubAccountId] = useState<string | null>(null);
+  const [accountsLoaded, setAccountsLoaded] = useState(false);
 
   useEffect(() => {
     if (!session) return;
@@ -39,6 +40,7 @@ const Navbar = () => {
       setGithubAccountId(
         (github as { accountId: string } | undefined)?.accountId ?? null,
       );
+      setAccountsLoaded(true);
     });
   }, [session]);
 
@@ -95,7 +97,7 @@ const Navbar = () => {
             <ThemeToggle />
           </>
         )}
-        {isPending ? (
+        {isPending || (session && !accountsLoaded) ? (
           <Loader2 className="animate-spin h-5 w-5 text-muted-foreground" />
         ) : session ? (
           <DropdownMenu>

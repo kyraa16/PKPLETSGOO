@@ -9,9 +9,7 @@ import {
 } from "react";
 import { getConfig, updateConfig } from "@/lib/actions/config";
 
-
 // ── Types ─────────────────────────────────────────────────────
-
 
 export type Theme = "light" | "dark" | "system";
 export type ColorTheme =
@@ -31,9 +29,7 @@ export type FontTheme =
   | "times"
   | "comic";
 
-
 // ── Contexts ──────────────────────────────────────────────────
-
 
 type ThemeContextType = {
   theme: Theme;
@@ -42,18 +38,15 @@ type ThemeContextType = {
   setTheme: (theme: Theme) => void;
 };
 
-
 type ColorThemeContextType = {
   colorTheme: ColorTheme;
   setColorTheme: (theme: ColorTheme) => void;
 };
 
-
 type FontThemeContextType = {
   fontTheme: FontTheme;
   setFontTheme: (font: FontTheme) => void;
 };
-
 
 const ThemeContext = createContext<ThemeContextType>({
   theme: "system",
@@ -62,26 +55,21 @@ const ThemeContext = createContext<ThemeContextType>({
   setTheme: () => {},
 });
 
-
 export const ColorThemeContext = createContext<ColorThemeContextType>({
   colorTheme: "default",
   setColorTheme: () => {},
 });
-
 
 export const FontThemeContext = createContext<FontThemeContextType>({
   fontTheme: "default",
   setFontTheme: () => {},
 });
 
-
 export const useTheme = () => useContext(ThemeContext);
 export const useColorTheme = () => useContext(ColorThemeContext);
 export const useFontTheme = () => useContext(FontThemeContext);
 
-
 // ── Helpers ───────────────────────────────────────────────────
-
 
 function getSystemTheme(): "light" | "dark" {
   return window.matchMedia("(prefers-color-scheme: dark)").matches
@@ -89,11 +77,9 @@ function getSystemTheme(): "light" | "dark" {
     : "light";
 }
 
-
 function applyDarkMode(resolved: "light" | "dark") {
   document.documentElement.classList.toggle("dark", resolved === "dark");
 }
-
 
 function applyColorTheme(theme: ColorTheme) {
   const html = document.documentElement;
@@ -103,7 +89,6 @@ function applyColorTheme(theme: ColorTheme) {
   if (theme !== "default") html.classList.add(`theme-${theme}`);
 }
 
-
 function applyFontTheme(font: FontTheme) {
   const html = document.documentElement;
   html.classList.forEach((c) => {
@@ -112,9 +97,7 @@ function applyFontTheme(font: FontTheme) {
   if (font !== "default") html.classList.add(`font-${font}`);
 }
 
-
 // ── Provider ──────────────────────────────────────────────────
-
 
 export default function ThemeProvider({
   children,
@@ -127,22 +110,6 @@ export default function ThemeProvider({
   const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">("light");
   const [colorTheme, setColorThemeState] = useState<ColorTheme>("default");
   const [fontTheme, setFontThemeState] = useState<FontTheme>("default");
-
-
-  // Apply stored theme immediately to avoid flash before DB resolves
-  useEffect(() => {
-    const t = (localStorage.getItem("theme") as Theme) || "system";
-    const c = (localStorage.getItem("color-theme") as ColorTheme) || "default";
-    const f = (localStorage.getItem("font-theme") as FontTheme) || "default";
-    const resolved = t === "system" ? getSystemTheme() : t;
-    setThemeState(t);
-    setResolvedTheme(resolved);
-    setColorThemeState(c);
-    setFontThemeState(f);
-    applyDarkMode(resolved);
-    applyColorTheme(c);
-    applyFontTheme(f);
-  }, []);
 
   // Load config from DB on mount and sync to localStorage
   useEffect(() => {
@@ -164,13 +131,16 @@ export default function ThemeProvider({
     });
   }, []);
 
-
   // Subscribe to real-time theme changes via SSE
   useEffect(() => {
     const es = new EventSource("/api/theme-stream");
     es.onmessage = (event) => {
       try {
-        const { theme: t, colorTheme: c, fontTheme: f } = JSON.parse(event.data) as {
+        const {
+          theme: t,
+          colorTheme: c,
+          fontTheme: f,
+        } = JSON.parse(event.data) as {
           theme: Theme;
           colorTheme: ColorTheme;
           fontTheme: FontTheme;
@@ -193,7 +163,6 @@ export default function ThemeProvider({
     return () => es.close();
   }, []);
 
-
   // Follow system preference when theme is "system"
   useEffect(() => {
     const mq = window.matchMedia("(prefers-color-scheme: dark)");
@@ -208,7 +177,6 @@ export default function ThemeProvider({
     return () => mq.removeEventListener("change", handler);
   }, [theme]);
 
-
   const setTheme = useCallback((newTheme: Theme) => {
     const resolved = newTheme === "system" ? getSystemTheme() : newTheme;
     setThemeState(newTheme);
@@ -218,14 +186,12 @@ export default function ThemeProvider({
     updateConfig({ theme: newTheme });
   }, []);
 
-
   const setColorTheme = useCallback((newColor: ColorTheme) => {
     setColorThemeState(newColor);
     applyColorTheme(newColor);
     localStorage.setItem("color-theme", newColor);
     updateConfig({ colorTheme: newColor });
   }, []);
-
 
   const setFontTheme = useCallback((newFont: FontTheme) => {
     setFontThemeState(newFont);
@@ -234,9 +200,10 @@ export default function ThemeProvider({
     updateConfig({ fontTheme: newFont });
   }, []);
 
-
   return (
-    <ThemeContext.Provider value={{ theme, resolvedTheme, canEditTheme, setTheme }}>
+    <ThemeContext.Provider
+      value={{ theme, resolvedTheme, canEditTheme, setTheme }}
+    >
       <ColorThemeContext.Provider value={{ colorTheme, setColorTheme }}>
         <FontThemeContext.Provider value={{ fontTheme, setFontTheme }}>
           {children}
