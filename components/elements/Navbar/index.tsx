@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { authClient } from "@/lib/auth-client";
 import { createAuthClient } from "better-auth/react";
-import { LogOut, Loader2, Palette } from "lucide-react";
+import { LogOut, Loader2, Palette, User } from "lucide-react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
@@ -83,30 +83,7 @@ const Navbar = () => {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button className="relative size-10 rounded-full overflow-hidden md:size-12 focus:outline-none">
-                <Image
-                  src={
-                    !displayImage || displayImage === ""
-                      ? "/hengker-white.png"
-                      : displayImage
-                  }
-                  alt="profile"
-                  fill
-                  sizes="default"
-                  loading="eager"
-                  className="hidden dark:block"
-                />
-                <Image
-                  src={
-                    !displayImage || displayImage === ""
-                      ? "/hengker-black.png"
-                      : displayImage
-                  }
-                  alt="profile"
-                  fill
-                  sizes="default"
-                  loading="eager"
-                  className="dark:hidden"
-                />
+                <User />
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-48 mt-4 md:mt-7">
